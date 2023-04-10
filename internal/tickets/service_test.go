@@ -2,6 +2,7 @@ package tickets
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"desafio-go-web/internal/domain"
@@ -80,7 +81,14 @@ func (r *stubRepo) GetAll(ctx context.Context) ([]domain.Ticket, error) {
 }
 
 func (r *stubRepo) GetTotalTickets(ctx context.Context, destination string) (int, error) {
-	return 0, nil
+	r.db.spy = true
+	cont := 0
+	for _, ticket := range r.db.db {
+		if ticket.Country == destination {
+			cont++
+		}
+	}
+	return cont, nil
 }
 
 func (r *stubRepo) GetTicketByDestination(ctx context.Context, destination string) ([]domain.Ticket, error) {
@@ -101,7 +109,18 @@ func (r *stubRepo) GetTicketByDestination(ctx context.Context, destination strin
 	return tkts, nil
 }
 func (r *stubRepo) AverageDestination(ctx context.Context, destination string) (float64, error) {
-	return 0.0, nil
+	r.db.spy = true
+	tickets, _ := r.GetTicketByDestination(ctx, destination)
+
+	countPassangers := len(tickets)
+	countPassangersByDestination, _ := r.GetTotalTickets(ctx, destination)
+
+	if countPassangers == 0 {
+		return 0.0, fmt.Errorf("Error: No existen tickets")
+	}
+
+	average := float64(countPassangersByDestination) / float64(countPassangers)
+	return average, nil
 }
 
 func TestGetTicketByDestination(t *testing.T) {
