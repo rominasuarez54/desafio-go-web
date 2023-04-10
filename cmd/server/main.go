@@ -6,9 +6,8 @@ import (
 	"os"
 	"strconv"
 
-	"desafio-go-web/cmd/server/handler"
+	"desafio-go-web/cmd/server/router"
 	"desafio-go-web/internal/domain"
-	"desafio-go-web/internal/tickets"
 
 	"github.com/gin-gonic/gin"
 )
@@ -24,17 +23,8 @@ func main() {
 	r := gin.Default()
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 
-	/*router := router.NewRouter(r, list)
-	router.MapRoutes()*/
-	repository := tickets.NewRepository(list)
-	service := tickets.NewService(repository)
-	productHandler := handler.NewService(service)
-
-	productGroup := r.Group("/ticket")
-	{
-		productGroup.GET("getByCountry/:dest", productHandler.GetTicketsByCountry())
-		productGroup.GET("/getAverage/:dest", productHandler.AverageDestination())
-	}
+	router := router.NewRouter(r, list)
+	router.MapRoutes()
 
 	if err := r.Run(); err != nil {
 		panic(err)

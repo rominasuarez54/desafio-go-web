@@ -79,6 +79,10 @@ func (r *stubRepo) GetAll(ctx context.Context) ([]domain.Ticket, error) {
 	return tickets, nil
 }
 
+func (r *stubRepo) GetTotalTickets(ctx context.Context, destination string) (int, error) {
+	return 0, nil
+}
+
 func (r *stubRepo) GetTicketByDestination(ctx context.Context, destination string) ([]domain.Ticket, error) {
 
 	var tkts []domain.Ticket
@@ -95,6 +99,9 @@ func (r *stubRepo) GetTicketByDestination(ctx context.Context, destination strin
 	}
 
 	return tkts, nil
+}
+func (r *stubRepo) AverageDestination(ctx context.Context, destination string) (float64, error) {
+	return 0.0, nil
 }
 
 func TestGetTicketByDestination(t *testing.T) {
