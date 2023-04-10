@@ -1,4 +1,4 @@
-module github.com/bootcamp-go/desafio-go-web
+module desafio-go-web
 
 go 1.17
 
